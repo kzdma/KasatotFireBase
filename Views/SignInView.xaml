@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="KasatotFireBase.Views.SignInView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="SignInView">
+
+    <Grid>
+        <VerticalStackLayout>
+
+            <!--  Email Entry  -->
+            <Border
+                Padding="10"
+                Stroke="#ccc"
+                StrokeShape="RoundRectangle 8"
+                StrokeThickness="1">
+                <Entry
+                    FontSize="18"
+                    Keyboard="Email"
+                    Placeholder="Email"
+                    ReturnType="Go"
+                    Text="{Binding UserEmail}"
+                    TextColor="Wheat" />
+            </Border>
+
+            <!--  Password Entry  -->
+            <Border
+                Stroke="#ccc"
+                StrokeShape="RoundRectangle 8"
+                StrokeThickness="1">
+
+                <Entry
+                    BackgroundColor="Transparent"
+                    FontSize="18"
+                    Placeholder="Password"
+                    Text="{Binding UserPassword}"
+                    TextColor="Wheat"
+                    VerticalOptions="Center" />
+            </Border>
+
+            <!--  SignIn Button  -->
+            <Button
+                Command="{Binding SignInCommand}"
+                CornerRadius="8"
+                FontSize="18"
+                HeightRequest="50"
+                Text="SignIn" />
+
+            <Label
+                Margin="20"
+                FontSize="20"
+                Text="{Binding ErrorMessage}"
+                TextColor="Red" />
+
+        </VerticalStackLayout>
+
+        <!--  מסך טעינה  -->
+        <Grid
+            HorizontalOptions="Fill"
+            IsVisible="{Binding IsBusy}"
+            VerticalOptions="Fill">
+
+            <Grid
+                HorizontalOptions="Fill"
+                IsVisible="{Binding IsBusy}"
+                VerticalOptions="Fill">
+
+                <BoxView
+                    BackgroundColor="LightBlue"
+                    HorizontalOptions="Fill"
+                    Opacity="0.7"
+                    VerticalOptions="Fill" />
+
+                <ActivityIndicator
+                    IsRunning="True"
+                    WidthRequest="100"
+                    Color="Beige" />
+            </Grid>
+        </Grid>
+    </Grid>
+</ContentPage>

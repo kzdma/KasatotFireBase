@@ -7,5 +7,5 @@ Kasatot ReadMe
 5. Open project in Firebase Console
 6. Create Firebase Auth module Email + Password
 7. Create IAuthService interface
-8. Create FirebaseAuthService class
+8. Create FirebaseAuthService class, connect to Firebase Auth
 

@@ -20,7 +20,7 @@
                     Placeholder="Email"
                     ReturnType="Go"
                     Text="{Binding UserEmail}"
-                    TextColor="Wheat" />
+                    TextColor="Black" />
             </Border>
 
             <!--  Password Entry  -->
@@ -34,7 +34,7 @@
                     FontSize="18"
                     Placeholder="Password"
                     Text="{Binding UserPassword}"
-                    TextColor="Wheat"
+                    TextColor="Black"
                     VerticalOptions="Center" />
             </Border>
 

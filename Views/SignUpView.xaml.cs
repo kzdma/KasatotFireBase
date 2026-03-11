@@ -2,9 +2,9 @@ using KasatotFireBase.ViewModels;
 
 namespace KasatotFireBase.Views;
 
-public partial class SignInView : ContentPage
+public partial class SignUpView : ContentPage
 {
-	public SignInView(SignInViewModel vm)
+	public SignUpView(SignUpViewModel vm)
 	{
 		InitializeComponent();
 		vm.Navigation = this.Navigation;

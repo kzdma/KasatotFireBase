@@ -19,10 +19,10 @@ namespace KasatotFireBase.Service.Firebase
 			var config = new FirebaseAuthConfig()
 			{
 				//current_key from google-services.json
-				ApiKey = "",
+				ApiKey = "AIzaSyA9T3iijJOvijeYDPWuLxdqP9y8TFjA1ZI",
 
 				//project_id from google-services.json + ".firebaseapp.com"
-				AuthDomain = "",
+				AuthDomain = "kasatotdb.firebaseapp.com",
 				Providers = new FirebaseAuthProvider[]
 					{
 						new EmailProvider()

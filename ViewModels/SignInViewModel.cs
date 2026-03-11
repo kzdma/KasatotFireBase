@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using KasatotFireBase.Service;
 using KasatotFireBase.Service.Firebase;
+using KasatotFireBase.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,8 @@ namespace KasatotFireBase.ViewModels
 {
     public partial class SignInViewModel : ObservableObject
     {
-        private FirebaseAuthService _authService;
+        private IAuthService _authService;
+        private Page _signUpPage;
 
         [ObservableProperty]
         private bool _isBusy;
@@ -23,9 +25,13 @@ namespace KasatotFireBase.ViewModels
         [ObservableProperty]
         private string _userPassword;
 
-        public SignInViewModel() 
+		public INavigation Navigation { get; set; }
+
+		public SignInViewModel(IAuthService authService, SignUpView signUpPage) 
         {
-            _authService = new FirebaseAuthService(new LogService());
+            _signUpPage = signUpPage;
+			_authService = authService; // Injection from DIC Conteiner
+                                        // new FirebaseAuthService(new LogService());
 
             //Debug Mode
             UserEmail = "admin@gmail.com";
@@ -51,5 +57,19 @@ namespace KasatotFireBase.ViewModels
                 //await Shell.Current.DisplayAlert("SignIn",ex.Message, "Cancel");
             }        
         }
-    }
+
+		[RelayCommand]
+        private async Task NavigateToSignUp()
+        {
+			//Application.Current!.Windows[0].Page = _signUpPage;
+			try
+			{
+				await Navigation!.PushAsync(_signUpPage);
+			}
+			catch (Exception ex)
+			{
+				var message = ex.Message;
+			}
+		}
+	}
 }

@@ -4,14 +4,17 @@ namespace KasatotFireBase
 {
     public partial class App : Application
     {
-        public App()
+        private Page _page;
+
+        public App(SignInView signinpage)
         {
             InitializeComponent();
-        }
+			_page = signinpage;
+		}
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            return new Window(new SignInView());
+            return new Window(new NavigationPage(_page));
         }
     }
 }

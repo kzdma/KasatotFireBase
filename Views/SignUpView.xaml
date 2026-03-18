@@ -6,93 +6,183 @@
     Title="SignUpView"
     NavigationPage.HasNavigationBar="False">
 
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/Styles/MyStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Background>
+        <!--  Man Of Steel  -->
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Offset="0.0" Color="#780206" />
+            <!--<GradientStop Offset="0.5" Color="#12D8FA"/>-->
+            <GradientStop Offset="1.0" Color="#061161" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
     <Grid>
-        <VerticalStackLayout Margin="20">
+        <Grid RowDefinitions="1.1*,3*,1*">
 
-            <Label
-                Margin="0,20,0,20"
-                FontSize="20"
-                Text="Register New User" />
+            <!--  User Image  -->
+            <StackLayout Margin="0,15,0,10" VerticalOptions="Center">
+                <Border
+                    Background="Transparent"
+                    HeightRequest="100"
+                    HorizontalOptions="Center"
+                    Stroke="{AppThemeBinding Light={DynamicResource Gray900},
+                                             Dark={DynamicResource Gray200}}"
+                    StrokeThickness="2"
+                    VerticalOptions="Center"
+                    WidthRequest="100">
 
-            <!--  Email Entry  -->
-            <Border
-                Margin="0,0,0,5"
-                Padding="10"
-                Stroke="#ccc"
-                StrokeShape="RoundRectangle 8"
-                StrokeThickness="1">
-                <Entry
-                    FontSize="18"
-                    Keyboard="Email"
-                    Placeholder="Email"
-                    ReturnType="Go"
-                    Text="{Binding UserEmail}"
-                    TextColor="Black" />
-            </Border>
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="50" />
+                    </Border.StrokeShape>
 
-            <!--  Password Entry  -->
-            <Border
-                Margin="0,0,0,10"
-                Padding="10"
-                Stroke="#ccc"
-                StrokeShape="RoundRectangle 8"
-                StrokeThickness="1">
-                <Entry
-                    BackgroundColor="Transparent"
-                    FontSize="18"
-                    Placeholder="Password"
-                    Text="{Binding UserPassword}"
-                    TextColor="Black"
-                    VerticalOptions="Center" />
-            </Border>
+                    <ImageButton
+                        Margin="0,25,0,20"
+                        Aspect="Fill"
+                        Command="{Binding GetUserImageCommand}"
+                        HeightRequest="110"
+                        Source="{Binding UserImageSource, TargetNullValue='user_default.jpg'}" />
+                </Border>
+            </StackLayout>
 
-            <!--  SignUp Button  -->
-            <Button
-                Margin="0,0,0,10"
-                Command="{Binding SignUpCommand}"
-                CornerRadius="8"
-                FontSize="18"
-                HeightRequest="50"
-                Text="SignUp" />
+            <!--  User Fields  -->
+            <VerticalStackLayout Grid.Row="1" VerticalOptions="Center">
+                <Grid RowDefinitions="*,*,*,*,*,*,*,*">
+                    <!--  שדה שם פרטי  -->
+                    <Border Style="{StaticResource FormBorder}">
 
-            <!--  Navigate to SignIn Button  -->
-            <Button
-                Command="{Binding NavigateToSignInCommand}"
-                CornerRadius="8"
-                FontSize="18"
-                HeightRequest="50"
-                Text="To SigIn" />
+                        <Entry
+                            Placeholder="First Name"
+                            Style="{StaticResource FormEntry}"
+                            Text="{Binding FName}" />
 
-            <Label
-                Margin="20"
-                FontSize="20"
-                Text="{Binding ErrorMessage}"
-                TextColor="Red" />
+                    </Border>
 
-        </VerticalStackLayout>
+                    <!--  שדה שם משפחה  -->
+                    <Border Grid.Row="1" Style="{StaticResource FormBorder}">
+
+                        <Entry
+                            Placeholder="Last Name"
+                            Style="{StaticResource FormEntry}"
+                            Text="{Binding LName}" />
+                    </Border>
+
+                    <!--  שדה דואל  -->
+                    <Border Grid.Row="2" Style="{StaticResource FormBorder}">
+
+                        <Entry
+                            Keyboard="Email"
+                            Placeholder="Email"
+                            Style="{StaticResource FormEntry}"
+                            Text="{Binding UEmail}" />
+
+                    </Border>
+
+                    <!--  שדה סיסמה  -->
+                    <Border Grid.Row="3" Style="{StaticResource FormBorder}">
+                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+
+                            <Entry
+                                IsPassword="{Binding EntryAsPassword}"
+                                Placeholder="Password"
+                                Style="{StaticResource FormEntry}"
+                                Text="{Binding UPassword}" />
+
+                            <Button
+                                Margin="5,0,0,0"
+                                Padding="0"
+                                BackgroundColor="Transparent"
+                                Command="{Binding TogglePasswordCommand}"
+                                FontFamily="MaterialIcons"
+                                FontSize="24"
+                                HorizontalOptions="End"
+                                Text="{Binding PasswordIconCode}"
+                                TextColor="White"
+                                VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+
+                    <!--  שדה מספר נייד  -->
+                    <Border Grid.Row="4" Style="{StaticResource FormBorder}">
+
+                        <Entry
+                            Keyboard="Telephone"
+                            Placeholder="Mobile"
+                            Style="{StaticResource FormEntry}"
+                            Text="{Binding UMobile}" />
+                    </Border>
+
+                    <!--  כפתור הרשמה  -->
+                    <Button
+                        Grid.Row="5"
+                        Margin="30,0,30,0"
+                        Command="{Binding SignUpCommand}"
+                        CornerRadius="8"
+                        FontSize="20"
+                        HeightRequest="50"
+                        Text="Sign Up"
+                        TextColor="White" />
+
+                    <!--  Already have an account?  -->
+                    <HorizontalStackLayout
+                        Grid.Row="6"
+                        Margin="0,10,0,0"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center">
+
+                        <Label
+                            Margin="14,0,0,0"
+                            FontSize="16"
+                            Text="Already have an account?"
+                            TextColor="White"
+                            VerticalTextAlignment="Center" />
+
+                        <Button
+                            BackgroundColor="Transparent"
+                            Command="{Binding NavigateToSignInCommand}"
+                            FontSize="16"
+                            Text="SignIn"
+                            TextColor="Aquamarine" />
+
+                    </HorizontalStackLayout>
+
+                    <!--  Error Message  -->
+                    <!--  {Binding ErrorMessage}{Binding SignUpMessageVisible}  -->
+                    <Label
+                        Grid.Row="7"
+                        Margin="0,10,0,0"
+                        FontSize="16"
+                        HorizontalTextAlignment="Center"
+                        IsVisible="Visible"
+                        Text="ERROR"
+                        TextColor="#ff4dd2" />
+                </Grid>
+            </VerticalStackLayout>
+        </Grid>
+
+        <!--<Grid ColumnDefinitions="*,8*,*" RowDefinitions="0.6*,4*,*">-->
 
         <!--  מסך טעינה  -->
         <Grid
             HorizontalOptions="Fill"
             IsVisible="{Binding IsBusy}"
             VerticalOptions="Fill">
-
-            <Grid
+            <BoxView
+                BackgroundColor="LightBlue"
                 HorizontalOptions="Fill"
-                IsVisible="{Binding IsBusy}"
-                VerticalOptions="Fill">
-
-                <BoxView
-                    BackgroundColor="LightBlue"
-                    HorizontalOptions="Fill"
-                    Opacity="0.7"
-                    VerticalOptions="Fill" />
-
-                <ActivityIndicator
-                    IsRunning="True"
-                    WidthRequest="100"
-                    Color="Beige" />
-            </Grid>
+                Opacity="0.7"
+                VerticalOptions="Fill" />
+            <ActivityIndicator
+                IsRunning="True"
+                WidthRequest="100"
+                Color="Beige" />
         </Grid>
     </Grid>
+
 </ContentPage>

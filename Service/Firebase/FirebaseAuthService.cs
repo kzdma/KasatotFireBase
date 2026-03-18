@@ -131,6 +131,11 @@ namespace KasatotFireBase.Service.Firebase
 			//}
 		}
 
+		//public async Task RessetPassword(string email)
+		//{
+		//	await _authClient!.ResetEmailPasswordAsync(email);
+		//}
+
 		public async Task SignOut()
 		{
 			throw new NotImplementedException();

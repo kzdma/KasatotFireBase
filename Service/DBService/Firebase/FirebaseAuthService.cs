@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KasatotFireBase.Service.Firebase
+namespace KasatotFireBase.Service.DBService.Firebase
 {
 	public class FirebaseAuthService : IAuthService
 	{
@@ -19,10 +19,10 @@ namespace KasatotFireBase.Service.Firebase
 			var config = new FirebaseAuthConfig()
 			{
 				//current_key from google-services.json
-				ApiKey = "AIzaSyA9T3iijJOvijeYDPWuLxdqP9y8TFjA1ZI",
+				ApiKey = "",
 
 				//project_id from google-services.json + ".firebaseapp.com"
-				AuthDomain = "kasatotdb.firebaseapp.com",
+				AuthDomain = "",
 				Providers = new FirebaseAuthProvider[]
 					{
 						new EmailProvider()

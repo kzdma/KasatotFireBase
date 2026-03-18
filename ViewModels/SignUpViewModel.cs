@@ -1,60 +1,221 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using KasatotFireBase.Service;
-using KasatotFireBase.Service.Firebase;
+using Firebase.Auth;
+using KasatotFireBase.Helper;
+using KasatotFireBase.Models;
+using KasatotFireBase.Service.DBService;
 using KasatotFireBase.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace KasatotFireBase.ViewModels
 {
 	public partial class SignUpViewModel : ObservableObject
 	{
-		private IAuthService _authService;
+		private AppUser? newUser;
+		private readonly IAppUserRepository _dbService;
+
+		private string _fName;
+		private string _lName;
+		private string _uEmail;
+		private string _uPassword;
+		private string _uMobile;
+
+		#region Properties
+		public INavigation Navigation { get; set; }
+		public string FName
+		{
+			get => _fName;
+			set
+			{
+				if (_fName != value)
+				{
+					_fName = value;
+					OnPropertyChanged();
+					(SignUpCommand as Command).ChangeCanExecute();
+				}
+			}
+		}
+		public string LName
+		{
+			get => _lName;
+			set
+			{
+				if (_lName != value)
+				{
+					_lName = value;
+					OnPropertyChanged();
+					(SignUpCommand as Command).ChangeCanExecute();
+				}
+			}
+		}
+		public string UEmail
+		{
+			get => _uEmail;
+			set
+			{
+				if (_uEmail != value)
+				{
+					_uEmail = value;
+					OnPropertyChanged();
+					(SignUpCommand as Command).ChangeCanExecute();
+				}
+			}
+		}
+		public string UPassword
+		{
+			get => _uPassword;
+			set
+			{
+				if (_uPassword != value)
+				{
+					_uPassword = value;
+					OnPropertyChanged();
+					(SignUpCommand as Command).ChangeCanExecute();
+				}
+			}
+		}
+		public string UMobile
+		{
+			get => _uMobile;
+			set
+			{
+				if (_uMobile != value)
+				{
+					_uMobile = value;
+					OnPropertyChanged();
+					(SignUpCommand as Command).ChangeCanExecute();
+				}
+			}
+		}
 
 		[ObservableProperty]
 		private bool _isBusy;
+
+		[ObservableProperty]
+		private string _passwordIconCode;
+
+		[ObservableProperty]
+		private bool _entryAsPassword;
+
+		[ObservableProperty]
+		private ImageSource _userImageSource;
+
+		[ObservableProperty]
+		private bool _signUpMessageVisible;
+
 		[ObservableProperty]
 		private string _errorMessage;
-		[ObservableProperty]
-		private string _userEmail;
-		[ObservableProperty]
-		private string _userPassword;
 
-		public INavigation Navigation { get; set; }
+		public ICommand SignUpCommand { get; }
 
-		public SignUpViewModel(IAuthService authService)
+		#endregion
+
+		public SignUpViewModel(IAppUserRepository dbService)
 		{
-			_authService = authService;
+			//If Debug Mode	
+			_fName = "Konstantin";
+			_lName = "Zab";
+			_uEmail = "kon@yahoo.com";
+			_uPassword = "123456";
+			_uMobile = "0542233232";
+			//////////////////////////////////////
+
+			_isBusy = false;
+			_dbService = dbService;
+			EntryAsPassword = true;
+			PasswordIconCode = FontHelper.OPEN_EYE_ICON;
+			SignUpCommand = new Command(SignUp, Validate);
 		}
 
-		[RelayCommand]
-		private async Task SignUp()
+		private async void SignUp()
 		{
+			//Show Progress Bar
+			IsBusy = true;
+
+			newUser = new AppUser()
+			{
+				FirstName = FName,
+				LastName = LName,
+				UserEmail = UEmail,
+				UserPassword = UPassword,
+				UserMobile = UMobile,
+				RegDate = DateTime.Now.ToShortDateString(),
+				UBDate = DateTime.Now.ToShortDateString()
+			};
+
 			try
 			{
-				IsBusy = true; //Show lock screen
-				string userId = await _authService.CreateAuth(UserEmail, UserPassword);
+				newUser.Id = await _dbService!.CreateAsync(newUser);
+
+				//Set as admin
+				//await (_dbService as FirebaseUsersRepository)!.SetToAdmin(newUser.Id);
+				//newUser.IsAdmin = true;
 
 				IsBusy = false;
+
+				//Set CurrentUser
+				(App.Current as App)!.CurrentUser = newUser;
+
+				// Navigate to Main Page
+				//var mainPage = IPlatformApplication.Current!.Services.GetService<AppShell>();			
+				//Application.Current!.Windows[0].Page = mainPage;
 				Application.Current!.Windows[0].Page = new AppShell();
 			}
 			catch (Exception ex)
-			{
+			{ 
 				IsBusy = false;
-				ErrorMessage = ex.Message;
-				//await Shell.Current.DisplayAlert("SignIn",ex.Message, "Cancel");
+				ShowErrorMessage(ex.Message);
 			}
+		}
+
+		[RelayCommand]
+		private void GetUserImage()
+		{
+
+		}
+
+		[RelayCommand]
+		private void TogglePassword()
+		{
+			EntryAsPassword = !EntryAsPassword;
+			if (EntryAsPassword)
+				PasswordIconCode = FontHelper.OPEN_EYE_ICON;
+			else
+				PasswordIconCode = FontHelper.CLOSED_EYE_ICON;
 		}
 
 		[RelayCommand]
 		private async Task NavigateToSignIn()
 		{
-			//Application.Current!.Windows[0].Page = new SignInView();
-			await Navigation!.PopAsync();
+			try
+			{
+				await Navigation!.PopAsync();
+			}
+			catch (Exception ex)
+			{
+				//error
+			}
+		}
+		private bool Validate()
+		{
+			var fnameOK = !string.IsNullOrEmpty(FName);
+			var lnameOK = !string.IsNullOrEmpty(LName);
+			var emailOK = !string.IsNullOrEmpty(UEmail);
+			var passOK = string.IsNullOrEmpty(UPassword) ? false : UPassword.Length > 5;
+			var mobileOK = string.IsNullOrEmpty(UMobile) ? false : UMobile.Length == 10;
+
+			return fnameOK && lnameOK && emailOK && passOK && mobileOK;
+		}
+		private void ShowErrorMessage(string message)
+		{
+			SignUpMessageVisible = true;
+			ErrorMessage = message;
 		}
 	}
 }

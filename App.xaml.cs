@@ -1,12 +1,14 @@
-﻿using KasatotFireBase.Views;
+﻿using KasatotFireBase.Models;
+using KasatotFireBase.Views;
 
 namespace KasatotFireBase
 {
     public partial class App : Application
     {
         private Page _page;
+		public AppUser? CurrentUser { get; set; } = null;
 
-        public App(SignInView signinpage)
+		public App(SignInView signinpage)
         {
             InitializeComponent();
 			_page = signinpage;

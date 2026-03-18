@@ -14,7 +14,7 @@
 
     <Style x:Key="FormEntry" TargetType="Entry">
         <Setter Property="FontSize" Value="15" />
-        <Setter Property="TextColor" Value="Gray" />
+        <Setter Property="TextColor" Value="Wheat" />
         <Setter Property="Placeholder" Value="Enter text here" />
     </Style>
 

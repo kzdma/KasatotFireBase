@@ -24,7 +24,7 @@
     </ContentPage.Background>
 
     <Grid>
-        <Grid RowDefinitions="1.1*,3*,1*">
+        <Grid RowDefinitions="1.2*,3*,1*">
 
             <!--  User Image  -->
             <StackLayout Margin="0,15,0,10" VerticalOptions="Center">
@@ -159,8 +159,8 @@
                         Margin="0,10,0,0"
                         FontSize="16"
                         HorizontalTextAlignment="Center"
-                        IsVisible="Visible"
-                        Text="ERROR"
+                        IsVisible="{Binding SignUpMessageVisible}"
+                        Text="{Binding ErrorMessage}"
                         TextColor="#ff4dd2" />
                 </Grid>
             </VerticalStackLayout>

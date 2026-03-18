@@ -1,5 +1,6 @@
 ﻿using KasatotFireBase.Service;
-using KasatotFireBase.Service.Firebase;
+using KasatotFireBase.Service.DBService;
+using KasatotFireBase.Service.DBService.Firebase;
 using Microsoft.Extensions.Logging;
 
 namespace KasatotFireBase
@@ -15,7 +16,8 @@ namespace KasatotFireBase
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                });
+					fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIcons");
+				});
 
 #if DEBUG
     		builder.Logging.AddDebug();
@@ -45,6 +47,7 @@ namespace KasatotFireBase
 		{
 			builder.Services.AddSingleton<IAppLogger, LogService>();			
 			builder.Services.AddSingleton<IAuthService, FirebaseAuthService>();
+			builder.Services.AddSingleton<IAppUserRepository, FirebaseUsersRepository>();
 			return builder;
 		}
 	}

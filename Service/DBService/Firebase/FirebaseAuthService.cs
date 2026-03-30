@@ -23,6 +23,7 @@ namespace KasatotFireBase.Service.DBService.Firebase
 
 				//project_id from google-services.json + ".firebaseapp.com"
 				AuthDomain = "",
+				
 				Providers = new FirebaseAuthProvider[]
 					{
 						new EmailProvider()

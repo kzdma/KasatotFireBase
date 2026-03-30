@@ -1,4 +1,5 @@
-﻿using Firebase.Database.Query;
+﻿using Firebase.Database;
+using Firebase.Database.Query;
 using KasatotFireBase.Models;
 using System;
 using System.Collections.Generic;
@@ -78,9 +79,40 @@ namespace KasatotFireBase.Service.DBService.Firebase
 			throw new NotImplementedException();
 		}
 
-		public Task<AppUser> GetUserByIdAsync(string userId)
+		public async Task<AppUser> GetUserByIdAsync(string userId)
 		{
-			throw new NotImplementedException();
+			string errorMessage = string.Empty;
+			try
+			{
+				var user = await _firebaseClient!
+					.Child("users")
+					.Child(userId) //using Firebase.Database.Query;
+					.OnceSingleAsync<AppUser>();
+
+				return user;
+			}
+			catch (FirebaseException ex)
+			{
+				if (ex.Message.Contains("401") || ex.Message.Contains("Permission denied"))
+				{
+					errorMessage = "GetUserByIdAsync failed: Permissions denied!";
+				}
+				else if (ex.Message.Contains("404"))
+				{
+					errorMessage = "GetUserByIdAsync failed: Wrong db path!";
+				}
+				else
+				{
+					errorMessage = "GetUserByIdAsync failed: Unknown exception!";
+				}
+
+				_appLogger.LogDebug($"FirebaseUsersRepository {errorMessage}");
+				throw new Exception(errorMessage);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception($"FirebaseUsersRepository GetUserByIdAsync failed! {ex.Message}");
+			}
 		}
 
 		public Task SetToAdmin(string userId)
@@ -88,9 +120,27 @@ namespace KasatotFireBase.Service.DBService.Firebase
 			throw new NotImplementedException();
 		}
 
-		public Task<AppUser> SignInAsync(string userEmail, string userPassword)
+		public async Task<AppUser> SignInAsync(string userEmail, string userPassword)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				//1 SignIn to Firebase Authentication and get the user ID
+				string userId = await _authService.SignIn(userEmail, userPassword);
+
+				//2 Get the user data from RealTimeDB using the user ID
+				AppUser appUser = await GetUserByIdAsync(userId);
+
+				_appLogger.LogDebug($"FirebaseUsersRepository {userEmail} SignIn successfully");
+				return appUser;
+			}
+			catch (Exception ex)
+			{
+				_appLogger.LogDebug($"FirebaseUsersRepository SignIn failed: {ex.Message}");
+				if (!ex.Message.Contains("Incorrect email or password"))
+					throw new Exception("SignIn failed!");
+
+				throw new Exception(ex.Message);
+			}
 		}
 
 		public Task UpdateAsync(AppUser appUser)

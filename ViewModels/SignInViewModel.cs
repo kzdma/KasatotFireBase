@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using KasatotFireBase.Models;
 using KasatotFireBase.Service;
 using KasatotFireBase.Service.DBService;
 using KasatotFireBase.Views;
@@ -13,8 +14,8 @@ namespace KasatotFireBase.ViewModels
 {
     public partial class SignInViewModel : ObservableObject
     {
-        private IAuthService _authService;
-        private Page _signUpPage;
+		IAppUserRepository _dbService;
+		private Page _signUpPage;
 
         [ObservableProperty]
         private bool _isBusy;
@@ -27,14 +28,13 @@ namespace KasatotFireBase.ViewModels
 
 		public INavigation Navigation { get; set; }
 
-		public SignInViewModel(IAuthService authService, SignUpView signUpPage) 
+		public SignInViewModel(IAppUserRepository dbService, SignUpView signUpPage) 
         {
             _signUpPage = signUpPage;
-			_authService = authService; // Injection from DIC Conteiner
-                                        // new FirebaseAuthService(new LogService());
+			_dbService = dbService; // Injection from DIC Conteiner                                      
 
             //Debug Mode
-            UserEmail = "admin@gmail.com";
+            UserEmail = "kon@yahoo.com";
             UserPassword = "123456";
         
         }
@@ -44,12 +44,17 @@ namespace KasatotFireBase.ViewModels
         {      
             try
             {
-                IsBusy = true; //Show lock screen
-                string userId = await _authService.SignIn(UserEmail, UserPassword);
+				IsBusy = true; //Show lock screen
+				AppUser user = await _dbService.SignInAsync(UserEmail, UserPassword);
 
-                IsBusy = false;
+				IsBusy = false;
+
+				//SignIn Success, add user to Current user Session
+				(App.Current as App)!.CurrentUser = user;
+
+				//Navigate to MainPage
 				Application.Current!.Windows[0].Page = new AppShell();
-            }
+			}
             catch (Exception ex)
             {
 				IsBusy = false;
